@@ -21,13 +21,38 @@ app.post('/signup', async (req, res) => {
 app.get('/feeduser', async (req, res) => {
   try {
     const userEmail = req.body.emailId// e.g., /feeduser?emailId=test@example.com
-    const user = await UserModel.findOne({ emailId: userEmail });
+    const user = await UserModel.find({ emailId: userEmail });
     res.status(200).send(user);
   } catch (err) {
     console.error("Something went wrong:", err.message);
     res.status(500).send({ error: "Internal Server Error" });
   }
 });
+// get : fetch all users 
+app.get('/feedallUsers',async(req,res)=>{
+  const allusers=await UserModel.find({})
+  res.status(200).send(allusers)
+})
+
+
+
+//delete :user
+app.delete('/deleteuser',async(req,res)=>{
+  const userId = req.body.userId
+try {
+
+  const user=await UserModel.findByIdAndDelete(userId)
+  res.status(200).send("user deleted successfully")
+  
+} catch (error) {
+  res.status(400).send("something went wrong")
+}
+
+
+
+})
+
+
 
 // Connect DB and Start Server
 connectdb()
