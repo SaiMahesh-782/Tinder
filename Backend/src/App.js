@@ -49,10 +49,25 @@ try {
 }
 
 
-
 })
 
+//update user
 
+
+app.patch('/updateuser',async(req,res)=>{
+
+const userId=req.body.userId
+const data=req.body
+
+try {
+  
+  const user=await UserModel.findByIdAndUpdate({_id:userId},data)
+  console.log(user)
+  res.status(200).send("user updated successfully")
+} catch (error) {
+res.status(400).send("something went wrong")  
+}
+})
 
 // Connect DB and Start Server
 connectdb()
