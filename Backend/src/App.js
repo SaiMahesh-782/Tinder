@@ -60,12 +60,24 @@ const userId=req.body.userId
 const data=req.body
 
 try {
-  
-  const user=await UserModel.findByIdAndUpdate({_id:userId},data)
+  const AllowedOnes=["firstName","skills","about","skills"]
+const isAllowed=Object.keys(data).every(k=>{
+  AllowedOnes.includes(k)
+}) 
+if(!isAllowed){
+  throw new Error("update is not allowed")
+}
+if(data?.skills.length>10){
+  throw new Error("skills should not be greater than 10")
+}
+  const user=await UserModel.findByIdAndUpdate({_id:userId},data,{
+    returnDocument:"after",
+    runValidators:true
+  })
   console.log(user)
   res.status(200).send("user updated successfully")
 } catch (error) {
-res.status(400).send("something went wrong")  
+res.status(400).send(error.message)  
 }
 })
 
